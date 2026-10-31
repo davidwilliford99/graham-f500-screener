@@ -12,11 +12,19 @@ def get_fortune_500_tickers():
     tables = pd.read_html(StringIO(response.text))
     sp500_df = tables[0] # The first table on the page contains the S&P 500 companies
 
-    return sp500_df["Symbol"].str.replace(".", "-", regex=False).tolist()
+    return [
+        {
+            "ticker": symbol.replace(".", "-"), 
+            "industry": industry
+        }
+        for symbol, industry in sp500_df[["Symbol", "GICS Sector"]].itertuples(index=False, name=None)
+    ]
 
 # get the P/E ratio for the last 3 years
 def get_pe_ratio(ticker):
     income = ticker.get_income_stmt(freq="yearly")
+    if "DilutedEPS" not in income.index:
+        return None
     eps = income.loc["DilutedEPS"].iloc[:3]
     avg_eps = eps.mean()
     price = ticker.info["currentPrice"]
