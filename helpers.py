@@ -68,17 +68,27 @@ def get_company_data(symbol, industry):
         "industry": industry,
         "share_price": info.get("currentPrice"),
         "pe_ratio": get_pe_ratio(ticker, info),
-        "intrinsic_value": None # to be calculated later
+        "earnings_per_share": get_eps(ticker),
+        "book_value_per_share": info.get("bookValue"),
+        "intrinsic_value": None, # calculated later in analyzer.py
+        "margin_of_safety": None # calculated later in analyzer.py 
     }
 
 
 # get the P/E ratio for the last 3 years
 def get_pe_ratio(ticker, info):
+    avg_eps = get_eps(ticker)
+    if avg_eps is None or avg_eps == 0:
+        return None
+    price = info["currentPrice"]
+    last_3y_pe_ratio = price / avg_eps
+    return last_3y_pe_ratio
+
+# get the average EPS for the last 3 years
+def get_eps(ticker):
     income = ticker.get_income_stmt(freq="yearly")
     if "DilutedEPS" not in income.index:
         return None
     eps = income.loc["DilutedEPS"].iloc[:3]
     avg_eps = eps.mean()
-    price = info["currentPrice"]
-    last_3y_pe_ratio = price / avg_eps
-    return last_3y_pe_ratio
+    return avg_eps
