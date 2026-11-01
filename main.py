@@ -2,13 +2,13 @@
 # python -m pip freeze > requirements.txt
 
 from analyzer import analyze_company
-from helpers import get_fortune_500_tickers
+from helpers import get_fortune_500_data
 from concurrent.futures import ThreadPoolExecutor
 
 
 worthwhile_investments = []
 
-fortune_500_tickers = get_fortune_500_tickers()
+fortune_500_tickers = get_fortune_500_data()
 
 num_threads = 10
 

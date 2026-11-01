@@ -8,17 +8,21 @@ It prints the names of companies that pass every rule.
 
 | Rule | Requirement |
 | --- | --- |
-| Debt-to-equity | At least `0` and below `0.5` |
+| Debt-to-equity | At least `0`; below `0.5` normally, `1.0` for Utilities, Industrials, Real Estate, and Energy, or `2.0` for Financials |
 | P/E × P/B | At most `22.5`, with positive P/E and P/B |
 
-The P/E estimate uses the current share price divided by average diluted EPS
-from up to the three most recent reported annual periods. P/B and debt-to-equity
+<br>
+
+* The __P/E estimate__ uses the __current share price__ divided by __average diluted EPS__
+from the 3 most recent reported annual periods. __P/B__ and __debt-to-equity__
 are retrieved from Yahoo Finance. Companies with unavailable required data are
 not included.
-
-These are simplified screening rules, not a complete application of Graham's
+* Company data is fetched concurrently using ten worker threads and cached in
+`f500data.csv` for eight hours. The cache includes company details and financial
+metrics; __intrinsic value__ is currently a placeholder.
+* These are simplified screening rules, not a complete application of Graham's
 principles or investment advice. Verify financial data independently, for
-example with company annual (10-K) and quarterly (10-Q) reports.
+example with company annual __(10-K)__ and quarterly __(10-Q)__ reports.
 
 ## Run
 

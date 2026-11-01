@@ -1,5 +1,4 @@
 from helpers import get_pe_ratio
-import yfinance as yf
 
 target_debt_to_equity = 0.5
 target_debt_to_equity_utilities = 1.0
@@ -13,21 +12,16 @@ capital_intensive_sectors = {
     "Energy"
 }
 
-def analyze_company(company: dict[str, str]):
-    ticker = yf.Ticker(company["ticker"])
-    company_name = ticker.info.get("shortName", company["ticker"])
-    debt_to_equity = ticker.info.get("debtToEquity")
-    price_to_book = ticker.info.get("priceToBook")
+def analyze_company(company):
+    company_name = company["company_name"]
+    debt_to_equity = company["debt_to_equity"]
+    price_to_book = company["price_to_book"]
+    pe_ratio = company["pe_ratio"]
 
     if debt_to_equity is None or price_to_book is None:
         return None
 
     debt_to_equity /= 100
-
-    pe_ratio = get_pe_ratio(ticker)
-
-    if pe_ratio is None:
-        return None
 
     if company["industry"] == "Financials":
         max_debt_to_equity = target_debt_to_equity_financials
